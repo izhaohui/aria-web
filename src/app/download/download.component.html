@@ -1,0 +1,161 @@
+<div class="row">
+  <h4 class="col-8">Downloading</h4>
+  <div class="global-chart-wrapper">
+    <ngx-charts-area-chart
+      [view]="[2100, 60]"
+      [scheme]="{'domain': ['#007bff', '#28a745']}"
+      [results]="global_data.chart"
+      [yAxisTickFormatting]="formatSize"
+      [gradient]="true"
+      [schemeType]="'ordinal'"
+      [xAxis]="false"
+      [yAxis]="false"
+      [legend]="false"
+      [curve]="curve"
+      [autoScale]="true"
+      [animations]="false"
+      [showGridLines]="false"
+    ></ngx-charts-area-chart>
+  </div>
+</div>
+<div>
+  <div class="input-container">
+    <input type="text" class="form-control" #downinput placeholder="Enter link to start a new download" (keyup.enter)="download(downinput.value)">
+    <label class="btn btn-primary btn-sm upload-btn">
+      <input type="file" #torrentfile hidden (change)="torrent(torrentfile.files[0])" accept="application/x-bittorrent">Upload Seed
+    </label>
+  </div>
+</div>
+<div class="row download-container">
+  <div class="col">
+    <div class="download-control">
+      <button class="btn btn-sm btn-primary" (click)="startAll()"><i class="fa fa-play-circle-o" aria-hidden="true"></i> startAll</button>
+      <button class="btn btn-sm btn-primary" (click)="pauseAll()"><i class="fa fa-pause-circle-o" aria-hidden="true"></i> pauseAll</button>
+    </div>
+    <div class="download-header">
+      <div class="col-1">#</div>
+      <div class="col-6">Name</div>
+      <div class="col-1">Size</div>
+      <div class="col-2">Speed</div>
+      <div class="col-2">Status</div>
+    </div>
+    <div *ngFor="let active of active_data">
+      <div class="download-item" (click)="active.show_tab = !active.show_tab;">
+        <div class="col-1">
+          <div class="progress-mask">{{ active.percent | number: '1.0-0'}}</div>
+          <round-progress class="circle-progress"
+            [current]="active.percent"
+            [max]="100"
+            [radius]="18"
+            [stroke]="4"
+            [duration]="1"
+            [color]="'#fd7e14'"
+          ></round-progress>
+        </div>
+        <div class="col-6">
+          <div class="main-content">{{ active.name }}</div>
+          <div class="secondary-content">{{ active.dir }}</div>
+        </div>
+        <div class="col-1">
+          <div class="main-content">{{ active.completed }}</div>
+          <div class="secondary-content">{{ active.length }}</div>
+        </div>
+        <div class="col-2">
+          <div class="main-content">{{ active.down_speed_human }}</div>
+          <div class="secondary-content">{{ active.remain }}</div>
+        </div>
+        <div class="col-2">
+          <div class="main-content">{{ active.status |uppercase }}</div>
+          <div class="secondary-content">{{ active.connections }}个连接, {{ active.file_completed }} / {{ active.files.length }}个文件完成 </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="active.show_tab">
+        <div class="float-left download-item-nav">
+          <nav class="nav flex-column">
+            <a class="nav-link" (click)="active.tab='detail'" [ngClass]="{'active': active.tab === 'detail'}">Detail</a>
+            <a class="nav-link" (click)="active.tab='speed'" [ngClass]="{'active': active.tab === 'speed'}">Speed</a>
+            <a class="nav-link" (click)="active.tab='file'" [ngClass]="{'active': active.tab === 'file'}">File</a>
+          </nav>
+        </div>
+        <div class="tab-wrapper float-left">
+          <div *ngIf="active.tab == 'detail'">
+            <div class="item-controls">
+              <button class="btn btn-sm btn-primary" (click)="start(active)" *ngIf="active.status != 'active'"><i class="fa fa-play-circle-o" aria-hidden="true"></i> start</button>
+              <button class="btn btn-sm btn-primary" (click)="pause(active)" *ngIf="active.status === 'active'"><i class="fa fa-pause-circle-o" aria-hidden="true"></i> pause</button>
+              <button class="btn btn-sm btn-primary" (click)="remove(active)"><i class="fa fa-times-circle-o" aria-hidden="true"></i> remove</button>
+            </div>
+            <table class="table detail-table">
+              <tr>
+                <th>Name</th>
+                <td>{{ active.name }}</td>
+              </tr>
+              <tr>
+                <th>Dir</th>
+                <td>{{ active.dir }}</td>
+              </tr>
+              <tr *ngIf="active.uri">
+                <th>Link</th>
+                <td>{{ active.uri }}</td>
+              </tr>
+              <tr>
+                <th>Connections</th>
+                <td>{{ active.connections }}</td>
+              </tr>
+              <tr>
+                <th>Download</th>
+                <td>{{ active.percent |number:'1.1-1' }}% ({{ active.completed }} / {{ active.length }})</td>
+              </tr>
+              <tr>
+                <th>Upload</th>
+                <td>{{ active.upload }} / {{ active.length }}</td>
+              </tr>
+              <tr>
+                <th>Field</th>
+                <td>
+                  <div>
+                    <i *ngFor="let c of active.bitfield" [ngClass]="'bit-color-' + c" class="bit-color"></i>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div *ngIf="active.tab == 'speed'">
+            <div class="speed-wrapper">
+              <ngx-charts-line-chart
+                [view]="[1000, 200]"
+                [scheme]="{'domain': ['#007bff', '#28a745']}"
+                [results]="active.chart"
+                [yAxisTickFormatting]="formatSize"
+                [gradient]="false"
+                [xAxis]="true"
+                [yAxis]="true"
+                [curve]="curve"
+                [legend]="true"
+                [autoScale]="true"
+                [animations]="true"
+                [showGridLines]="true"
+              ></ngx-charts-line-chart>
+            </div>
+
+          </div>
+          <div *ngIf="active.tab == 'file'">
+            <div class="item-controls">
+
+            </div>
+            <table class="table files-table">
+              <tr *ngFor="let file of active.files">
+                <td>
+                  {{ file.name }}
+                </td>
+                <td>{{ file.completed }} / {{ file.length }}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+</div>

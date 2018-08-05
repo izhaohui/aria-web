@@ -1,0 +1,55 @@
+<div *ngIf="config">
+  <form (ngSubmit)="submit()">
+    <div class="form-group row">
+      <label for="rpc" class="col-2 col-form-label">RPC URI</label>
+      <div class="col-10">
+        <input type="text" class="form-control" id="rpc" name="rpc" #rpc="ngModel" [pattern]="'^http://.*$'" required placeholder="Example http://192.168.1.1:6800/jsonrpc" [(ngModel)]="config['rpc']">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="token" class="col-2 col-form-label">Token</label>
+      <div class="col-10">
+        <input type="text" class="form-control" id="token" name="token" #token="ngModel" minlength="1" required placeholder="Example 123456" [(ngModel)]="config['token']">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="down" class="col-2 col-form-label">Download Limit</label>
+      <div class="col-10">
+        <input type="number" class="form-control" id="down" min="10" name="down" #down="ngModel" placeholder="Example 123456 Byte / S" [(ngModel)]="config['max-overall-download-limit']">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="up" class="col-2 col-form-label">Upload Limit</label>
+      <div class="col-10">
+        <input type="number" class="form-control" id="up" min="10" name="up" #up="ngModel" placeholder="Example 123456 Byte / S" [(ngModel)]="config['max-overall-upload-limit']">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="concurrent" class="col-2 col-form-label">Concurrent Download</label>
+      <div class="col-10">
+        <input type="number" class="form-control" id="concurrent" min="1" max="50" name="concurrent" #concurrent="ngModel" placeholder="Example 10" [(ngModel)]="config['max-concurrent-downloads']">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="entry" class="col-2 col-form-label">DHT Entry</label>
+      <div class="col-10">
+        <input type="text" class="form-control" id="entry" name="entry" #entry="ngModel" [pattern]="'^(\\d+\\.){3}\\d+\:\\d+$'" placeholder="Example 212.129.33.59:6881" [(ngModel)]="config['dht-entry-point']">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="trackers" class="col-2 col-form-label">Trackers</label>
+      <div class="col-10">
+        <textarea class="form-control" rows="8" id="trackers" name="trackers" #trackers="ngModel" placeholder="Example udp://62.138.0.158:6969/announce" [(ngModel)]="config['bt-tracker']"></textarea>
+      </div>
+    </div>
+    <div>
+      <div class="alert alert-danger" *ngIf="!rpc.valid">RPC 地址无效</div>
+      <div class="alert alert-danger" *ngIf="!token.valid">TOKEN不能为空</div>
+      <div class="alert alert-danger" *ngIf="!down.valid">下载限速须大于10</div>
+      <div class="alert alert-danger" *ngIf="!up.valid">上传限速须大于10</div>
+      <div class="alert alert-danger" *ngIf="!concurrent.valid">并行须介于1 - 50间</div>
+      <div class="alert alert-danger" *ngIf="!entry.valid">DHT Entry无效</div>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+  </form>
+</div>

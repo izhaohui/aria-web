@@ -1,0 +1,5 @@
+/* You can add global styles to this file, and also import other style files */
+@import url(~font-awesome/css/font-awesome.min.css);
+@import url(~bootstrap/dist/css/bootstrap.min.css);
+body{background-color: #F8F8F8;overflow-x: hidden}
+h1,h2,h3,h4,h5,h6{color: #6F6F6F}
