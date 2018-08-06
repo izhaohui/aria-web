@@ -16,4 +16,3 @@ ng build --prod --build-optimizer
 install nginx
 copy dist/web/* to your /var/www/html 
 
-

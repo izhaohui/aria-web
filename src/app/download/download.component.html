@@ -1,8 +1,8 @@
-<div class="row">
+<div class="row" #cc>
   <h4 class="col-8">Downloading</h4>
   <div class="global-chart-wrapper">
     <ngx-charts-area-chart
-      [view]="[2100, 60]"
+      [view]="[cc.ownerDocument.body.offsetWidth + 60, 60]"
       [scheme]="{'domain': ['#007bff', '#28a745']}"
       [results]="global_data.chart"
       [yAxisTickFormatting]="formatSize"
@@ -33,15 +33,15 @@
       <button class="btn btn-sm btn-primary" (click)="pauseAll()"><i class="fa fa-pause-circle-o" aria-hidden="true"></i> pauseAll</button>
     </div>
     <div class="download-header">
-      <div class="col-1">#</div>
-      <div class="col-6">Name</div>
-      <div class="col-1">Size</div>
-      <div class="col-2">Speed</div>
-      <div class="col-2">Status</div>
+      <div class="col-1 col-prog flex-fill">#</div>
+      <div class="col-6 col-name">Name</div>
+      <div class="col-1 col-size">Size</div>
+      <div class="col-2 col-speed flex-fill">Speed</div>
+      <div class="col-2 col-status">Status</div>
     </div>
     <div *ngFor="let active of active_data">
       <div class="download-item" (click)="active.show_tab = !active.show_tab;">
-        <div class="col-1">
+        <div class="col-1 col-prog flex-fill">
           <div class="progress-mask">{{ active.percent | number: '1.0-0'}}</div>
           <round-progress class="circle-progress"
             [current]="active.percent"
@@ -52,19 +52,19 @@
             [color]="'#fd7e14'"
           ></round-progress>
         </div>
-        <div class="col-6">
+        <div class="col-6 col-name">
           <div class="main-content">{{ active.name }}</div>
           <div class="secondary-content">{{ active.dir }}</div>
         </div>
-        <div class="col-1">
+        <div class="col-1 col-size">
           <div class="main-content">{{ active.completed }}</div>
           <div class="secondary-content">{{ active.length }}</div>
         </div>
-        <div class="col-2">
+        <div class="col-2 col-speed flex-fill">
           <div class="main-content">{{ active.down_speed_human }}</div>
           <div class="secondary-content">{{ active.remain }}</div>
         </div>
-        <div class="col-2">
+        <div class="col-2 col-status">
           <div class="main-content">{{ active.status |uppercase }}</div>
           <div class="secondary-content">{{ active.connections }}个连接, {{ active.file_completed }} / {{ active.files.length }}个文件完成 </div>
         </div>
@@ -120,9 +120,9 @@
             </table>
           </div>
           <div *ngIf="active.tab == 'speed'">
-            <div class="speed-wrapper">
+            <div class="speed-wrapper" #cd>
               <ngx-charts-line-chart
-                [view]="[1000, 200]"
+                [view]="[cc.offsetWidth - 110, 200]"
                 [scheme]="{'domain': ['#007bff', '#28a745']}"
                 [results]="active.chart"
                 [yAxisTickFormatting]="formatSize"
@@ -144,10 +144,10 @@
             </div>
             <table class="table files-table">
               <tr *ngFor="let file of active.files">
-                <td>
+                <td class="files-filename">
                   {{ file.name }}
                 </td>
-                <td>{{ file.completed }} / {{ file.length }}</td>
+                <td class="files-percent">{{ file.completed }} / {{ file.length }}</td>
               </tr>
             </table>
           </div>

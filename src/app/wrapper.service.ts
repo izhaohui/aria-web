@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DownloadService } from "./download.service";
 import { Observable, interval } from "rxjs";
+import {sp} from "@angular/core/src/render3";
 
 @Injectable({
   providedIn: 'root'
@@ -45,6 +46,7 @@ export class WrapperService {
     let res = [];
     const humanSize = WrapperService.human_size;
     const fileName = WrapperService.file_name;
+    const remainTime = WrapperService.remain_time;
     active.forEach(function(value, index){
       let item = {};
       item['gid'] = value.gid;
@@ -65,11 +67,7 @@ export class WrapperService {
       }else{
         item['name'] = null;
       }
-      if(value.totalLength - value.completedLength > 0 && value.downloadSpeed > 0){
-        item['remain'] = ((value.totalLength - value.completedLength) / value.downloadSpeed / 60).toFixed(1)  + " 分钟剩余";
-      }else{
-        item['remain'] = "无法估算"
-      }
+      item['remain'] = remainTime(value.totalLength - value.completedLength, value.downloadSpeed);
       item['files'] = [];
       if(typeof value.bitfield !== "undefined" && value.bitfield !== null){
         item['bitfield'] = value.bitfield.split('');
@@ -118,6 +116,25 @@ export class WrapperService {
       }
     }
     return "";
+  }
+
+  public static remain_time(size, speed){
+    if(size && size > 0 && speed && speed > 0){
+      let res = "";
+      let mins = size / speed / 60;
+      if(mins > 60 * 24){
+        res = (mins / 60 / 24).toFixed(2) + " 天剩余";
+      }else if(mins > 60){
+        res = (mins / 60).toFixed(2) + " 小时剩余";
+      }else if(mins > 1){
+        res = mins.toFixed(2) + " 分剩余"
+      }else{
+        res = "马上完成";
+      }
+      return res;
+
+    }
+    return "无法估算"
   }
 
   public static file_name(full_path): string {
