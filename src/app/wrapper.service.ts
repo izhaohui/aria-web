@@ -82,7 +82,8 @@ export class WrapperService {
           'name': fileName(file.path),
           'uris': file.uris,
           'completed': humanSize(file.completedLength),
-          'length': humanSize(file.length)
+          'length': humanSize(file.length),
+          'percent': file.length > 0?(file.completedLength / file.length * 100).toFixed(2): "0.0%"
         });
         file.uris.forEach(function(uri, u_index){
           if(u_index === 0){

@@ -22,4 +22,4 @@
 .menu-item span{display: inline-block;padding-left: 5px;position: relative;top:-5px;font-size: 24px;}
 .menu-item{color: #ADAEAE;}
 .menu .menu-item.active,.menu .menu-item:hover{color: #0099FB;cursor: pointer}
-.main{margin-top: 50px;}
+.main{margin-top: 80px;}

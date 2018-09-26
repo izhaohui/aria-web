@@ -1,21 +1,7 @@
 <div class="row" #cc>
   <h4 class="col-8">Downloading</h4>
   <div class="global-chart-wrapper">
-    <ngx-charts-area-chart
-      [view]="[cc.ownerDocument.body.offsetWidth + 60, 60]"
-      [scheme]="{'domain': ['#007bff', '#28a745']}"
-      [results]="global_data.chart"
-      [yAxisTickFormatting]="formatSize"
-      [gradient]="true"
-      [schemeType]="'ordinal'"
-      [xAxis]="false"
-      [yAxis]="false"
-      [legend]="false"
-      [curve]="curve"
-      [autoScale]="true"
-      [animations]="false"
-      [showGridLines]="false"
-    ></ngx-charts-area-chart>
+    <div appChart [name]="'global'" [width]="cc.ownerDocument.body.offsetWidth + 60" [height]="130" [tooltip]="true" [tick]="100"></div>
   </div>
 </div>
 <div>
@@ -121,22 +107,17 @@
           </div>
           <div *ngIf="active.tab == 'speed'">
             <div class="speed-wrapper" #cd>
-              <ngx-charts-line-chart
-                [view]="[cc.offsetWidth - 110, 200]"
-                [scheme]="{'domain': ['#007bff', '#28a745']}"
-                [results]="active.chart"
-                [yAxisTickFormatting]="formatSize"
-                [gradient]="false"
-                [xAxis]="true"
-                [yAxis]="true"
-                [curve]="curve"
-                [legend]="true"
-                [autoScale]="true"
-                [animations]="true"
-                [showGridLines]="true"
-              ></ngx-charts-line-chart>
+              <div appChart
+                   [name]="active.gid"
+                   [width]="cc.offsetWidth - 110"
+                   [height]="250"
+                   [yaxis]="true"
+                   [xaxis]="true"
+                   [legend]="true"
+                   [tooltip]="true"
+                   [tick]="30"
+              ></div>
             </div>
-
           </div>
           <div *ngIf="active.tab == 'file'">
             <div class="item-controls">
@@ -147,7 +128,7 @@
                 <td class="files-filename">
                   {{ file.name }}
                 </td>
-                <td class="files-percent">{{ file.completed }} / {{ file.length }}</td>
+                <td class="files-percent">{{ file.completed }} / {{ file.length }} ({{ file.percent }})</td>
               </tr>
             </table>
           </div>

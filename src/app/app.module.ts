@@ -9,23 +9,23 @@ import { RoundProgressModule } from 'angular-svg-round-progressbar';
 import { HttpClientModule } from "@angular/common/http";
 import { NotifyComponent, NotifyService} from "./notify.service";
 import { FormsModule } from "@angular/forms";
-import { NgxChartsModule } from "@swimlane/ngx-charts";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { Config } from "./config";
+import { ChartDirective } from './chart.directive';
 
 @NgModule({
   declarations: [
     AppComponent,
     SettingsComponent,
     DownloadComponent,
-    NotifyComponent
+    NotifyComponent,
+    ChartDirective
   ],
   imports: [
     BrowserModule,
     NgbModule.forRoot(),
     RoundProgressModule,
     HttpClientModule,
-    NgxChartsModule,
     FormsModule,
     AppRoutingModule,
     BrowserAnimationsModule

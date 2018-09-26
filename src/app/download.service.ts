@@ -52,6 +52,10 @@ export class DownloadService extends ProtoService{
     }
   }
 
+  public removeStop(gid): Observable<any> {
+    return this.request("aria2.removeDownloadResult", gid);
+  }
+
   public pause(gid, force = false): Observable<any> {
     if(force){
       return this.request("aria2.forcePause", gid);
